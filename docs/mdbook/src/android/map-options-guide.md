@@ -47,64 +47,69 @@ You will have the target point with some customization on the map
 
 The following code presents creating [MapLibreMapOptions](https://maplibre.org/maplibre-native/android/api/-map-libre%20-native%20-android/org.maplibre.android.maps/-map-libre-map-options/index.html) object and assigns it to `MapView` constructor
 ```Kotlin
-private lateinit var mapView: MapView
+class SimpleMapActivity : AppCompatActivity(), OnMapReadyCallback {
+    private lateinit var mapView: MapView
 
-override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    
-    val options = MapLibreMapOptions.createFromAttributes(this, null)
-    options.camera(
-        CameraPosition.Builder()
-            .target(LatLng(52.35273, 4.91638))
-            .tilt(25.0)
-            .zoom(13.0)
-            .build())
-    options.styleUrl("asset://streets.json")
-    
-    mapView = MapView(this,options)
-    mapView.id = R.id.mapView
-    mapView.onCreate(savedInstanceState)
-    mapView.getMapAsync(this)
-    setContentView(mapView)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val options = MapLibreMapOptions.createFromAttributes(this, null)
+        options.camera(
+            CameraPosition.Builder()
+                .target(LatLng(52.35273, 4.91638))
+                .tilt(25.0)
+                .zoom(13.0)
+                .build()
+        )
+        options.styleUrl("asset://streets.json")
+
+        mapView = MapView(this, options)
+        mapView.id = R.id.mapView
+        mapView.onCreate(savedInstanceState)
+        mapView.getMapAsync(this)
+        setContentView(mapView)
+    }
 }
 ```
 3. [MapLibreMapOptions](https://maplibre.org/maplibre-native/android/api/-map-libre%20-native%20-android/org.maplibre.android.maps/-map-libre-map-options/index.html) can also be used as an argument for [MapFragment](https://maplibre.org/maplibre-native/android/api/-map-libre%20-native%20-android/org.maplibre.android.maps/-support-map-fragment/index.html?query=open%20class%20SupportMapFragment%20:%20Fragment,%20OnMapReadyCallback) static factory method
 
 The following code snippet shows how to create [MapFragment](https://maplibre.org/maplibre-native/android/api/-map-libre%20-native%20-android/org.maplibre.android.maps/-support-map-fragment/index.html?query=open%20class%20SupportMapFragment%20:%20Fragment,%20OnMapReadyCallback) with static factory method:
 ```Kotlin
-private lateinit var mapView: MapView
+class SimpleMapActivity : AppCompatActivity(), OnMapReadyCallback {
+    private lateinit var mapView: MapView
 
-override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_map_fragment)
-    
-    val mapFragment: SupportMapFragment?
-    
-    if (savedInstanceState == null) {
-        val options = MapLibreMapOptions.createFromAttributes(this, null)
-        options.scrollGesturesEnabled(false)
-        options.zoomGesturesEnabled(false)
-        options.tiltGesturesEnabled(false)
-        options.rotateGesturesEnabled(false)
-        options.debugActive(false)
-        val dc = LatLng(38.90252, -77.02291)
-        options.minZoomPreference(9.0)
-        options.maxZoomPreference(11.0)
-        options.camera(
-            CameraPosition.Builder()
-                .target(dc)
-                .zoom(11.0)
-                .build()
-        )
-        mapFragment = SupportMapFragment.newInstance(options)
-        supportFragmentManager
-            .beginTransaction()
-            .add(R.id.fragment_container, mapFragment, TAG)
-            .commit()
-    } else {
-        mapFragment = supportFragmentManager.findFragmentByTag(TAG) as SupportMapFragment?
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_map_fragment)
+
+        val mapFragment: SupportMapFragment?
+
+        if (savedInstanceState == null) {
+            val options = MapLibreMapOptions.createFromAttributes(this, null)
+            options.scrollGesturesEnabled(false)
+            options.zoomGesturesEnabled(false)
+            options.tiltGesturesEnabled(false)
+            options.rotateGesturesEnabled(false)
+            options.debugActive(false)
+            val dc = LatLng(38.90252, -77.02291)
+            options.minZoomPreference(9.0)
+            options.maxZoomPreference(11.0)
+            options.camera(
+                CameraPosition.Builder()
+                    .target(dc)
+                    .zoom(11.0)
+                    .build()
+            )
+            mapFragment = SupportMapFragment.newInstance(options)
+            supportFragmentManager
+                .beginTransaction()
+                .add(R.id.fragment_container, mapFragment, TAG)
+                .commit()
+        } else {
+            mapFragment = supportFragmentManager.findFragmentByTag(TAG) as SupportMapFragment?
+        }
+        mapFragment!!.getMapAsync(this)
     }
-    mapFragment!!.getMapAsync(this)
 }
 ```
 You can find further information about `MapLibreMapOption` in the [documentation](https://maplibre.org/maplibre-native/android/api/-map-libre%20-native%20-android/org.maplibre.android.maps/-map-libre-map-options/index.html)
